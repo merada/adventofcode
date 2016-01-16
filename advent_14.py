@@ -52,10 +52,10 @@ def find_winning_points(reindeer, time):
     '''
     max_distance = 0
     points = {name: 0 for name in reindeer}
-    for s in range(time):
+    for t in range(time):
         # calculate distances
         for name, r in reindeer.items():
-            is_moving = True if s % (r['duration'] + r['rest']) < r['duration'] else False
+            is_moving = True if t % (r['duration'] + r['rest']) < r['duration'] else False
             if is_moving:
                 r['distance'] += r['speed']
                 if r['distance'] > max_distance:
