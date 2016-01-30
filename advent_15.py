@@ -3,8 +3,6 @@ import math
 import re
 import sys
 
-MAX_TSP = 100
-
 def main():
     ''' Determine the highest valued cookie you can make with the given ingredients.
         The sum of ingredients should add to 100 teaspoons, and the cookie must have
