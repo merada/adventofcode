@@ -14,34 +14,39 @@ def main():
     instructions = re.findall(pattern, instructions)
     instructions = map(lambda x: (x[0], int(x[1])), instructions)
 
+    part_1(instructions)
+    part_2(instructions)
+
+
+def part_1(instructions):
     directions = [0,0,0,0] # North,East,South,West
     current_direction = 0 # North
-    current_position = (0,0)
-    coordinates = set([current_position])
-    real_distance = -1
 
     for i in instructions:
         current_direction = turn(i[0], current_direction)
         directions[current_direction] += i[1]
-        current_position = move(directions)
-        if current_position in coordinates:
-            real_distance = calculate_distance(directions)
-        else:
-            coordinates.add(current_position)
-            print(coordinates)
-            print("\n\n\n")
 
-    print("PART_1: The Easter Bunny Headquarters are {} block(s) away.".format(calculate_distance(directions)))
-    if real_distance >= 0:
-        print("PART_2: The real Easter Bunny Headquarters are {} block(s) away.".format(real_distance))
-    else:
-        print("PART_2: We haven't found the real Easter Bunny Headquarters yet!")
+    # calculate distance from start using: abs(North - South) + abs(East - West)
+    distance = abs(directions[0] - directions[2]) + abs(directions[1] - directions[3])
+
+    print("PART_1: The Easter Bunny Headquarters are {} block(s) away.".format(distance))
 
 
-def calculate_distance(directions):
-    ''' abs(North - South) + abs(East - West)
-    '''
-    return abs(directions[0] - directions[2]) + abs(directions[1] - directions[3])
+def part_2(instructions):
+    current_direction = 0 # North
+    current_position = (0, 0)
+    visited = set([current_position])
+
+    for i in instructions:
+        current_direction = turn(i[0], current_direction)
+
+        for step in move(current_direction, i[1], current_position):
+            if step in visited:
+                print("PART_2: The real Easter Bunny Headquarters are {} block(s) away.".format(abs(step[0]) + abs(step[1])))
+                return
+            else:
+                visited.add(step)
+                current_position = step
 
 
 def turn(direction, current_direction):
@@ -58,10 +63,25 @@ def turn(direction, current_direction):
         return -1
     return current_direction
 
-def move(directions):
-    ''' Return position calculated as [North - South, East - West]
+
+def move(direction, distance, position):
+    ''' Return step by step position
     '''
-    return ((directions[0] - directions[2]), (directions[1] - directions[3]))
+    for i in range(distance):
+        if direction == 0: # North
+            step = (0, 1)
+        elif direction == 1: # East
+            step = (1, 0)
+        elif direction == 2: # South
+            step = (0, -1)
+        elif direction == 3: # West
+            step = (-1, 0)
+        else:
+            step = (0, 0)
+
+        position = tuple(sum(x) for x in zip(position, step))
+
+        yield position
 
 
 if __name__ == "__main__":
