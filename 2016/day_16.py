@@ -8,9 +8,6 @@ def main():
     while len(data) < disk_length:
         data = dragon(data)
 
-    print "Data is length ", len(data)
-    print data
-
     checksum = data[:disk_length]
     while len(checksum) % 2 == 0:
         checksum = check(checksum)
